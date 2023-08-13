@@ -1,0 +1,104 @@
+﻿@model IEnumerable<AgricultureApp.Models.MyBill.OrderBill>
+@{
+	ViewBag.Title = "GetOrderMyBill";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+	<div class="col-md-12">
+		@if (Model.Count() == 0)
+		{
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-warning">
+						<b>Note :</b> No bill available at the moment.
+					</div>
+				</div>
+			</div>
+		}
+		else
+		{
+			foreach (var bill in Model)
+			{
+
+				<hr />
+				<!-- Main content -->
+				<section class="invoice">
+					<!-- title row -->
+					<div class="row">
+						<div class="col-md-12">
+							<h2 class="page-header">
+								<i class="fa fa-sun-plant-wilt"></i> Hoticulture Managment
+								<small class="pull-right">Date: @DateTime.Now.Date.ToLongDateString()</small>
+							</h2>
+						</div>
+						<div class="col-md-12">
+							<h2 class="page-header">
+								<i class="fa fa-file-invoice"></i> Invoice No : @bill.BillCode
+							</h2>
+						</div>
+						<!-- /.col -->
+					</div><hr />
+					<!-- info row -->
+					<div class="row invoice-info">
+						<div class="col-sm-4 invoice-col">
+							Invoice From :
+							<address>
+								<strong>Oasis Gaming.</strong><br>
+								18 Grey St., Durban<br />
+								4001 Durban, South Africa <br />
+								Phone: (083) 802 2734<br>
+								Email: info@Oasis.com<br />
+							</address>
+						</div>
+						<div class="col-sm-4 invoice-col">
+							Invoice To :
+							<address>
+								<strong>@bill.Name @bill.Surname</strong><br>
+								Guest No: <strong>#@bill.RegNo</strong><br>
+								Email: <strong>@bill.Email</strong>
+							</address>
+						</div>
+
+					</div>
+					<hr />
+					<div class="row">
+
+						<!-- /.col -->
+						<div class="col-md-12">
+							<p class="lead">Bill Status: <b>@bill.Status</b></p>
+
+							<div class="table-responsive">
+								<table class="table">
+									<tr>
+										<td style="width:50%"></td>
+										<th>Order Total:</th>
+										<td class="text-right"> R @bill.OrderAmount</td>
+									</tr>
+									<tr>
+										<td style="width:50%"></td>
+										<th>Total Amount Due:</th>
+										<td class="text-right"><b> R @bill.TotalAmount</b></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<!-- /.col -->
+					</div><hr />
+					<!-- /.row -->
+					<!-- this row will not appear when printing -->
+					<div class="row no-print">
+						<div class="col-md-12">
+							@if (bill.TotalAmount > 0)
+							{
+								@Html.ActionLink("Pay Now", "OrderPayment", "PaymentBook", new { TotalPrice = bill.TotalAmount, id=bill.itemCode }, new { @class = "btn btn-success" })
+							}
+						</div>
+					</div>
+				</section>
+			}
+		}
+	</div>
+</div>
+

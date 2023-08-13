@@ -1,0 +1,54 @@
+﻿@model AgricultureApp.Models.Shipping.Shipment
+
+@{
+	ViewBag.Title = "shipmemntCreate";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	TempData.Keep("cart_item_id");
+}
+
+
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-horizontal" style="margin:20% auto auto auto; width:50%;">
+<h2 style="text-align:center">Please select driver</h2>
+
+		<h4>Shipment</h4>
+		<hr />
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.cart_item_id, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.cart_item_id, new { htmlAttributes = new { @class = "form-control", Value = TempData["cart_item_id"], @readonly = "readonly" } })
+				@Html.ValidationMessageFor(model => model.cart_item_id, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.DriverID, "Driver", htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.DropDownList("DriverID", null, htmlAttributes: new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.DriverID, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			@Html.LabelFor(model => model.expshipDate, "Estimated delivery day", htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.EditorFor(model => model.expshipDate, new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.expshipDate, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="Create" class="btn btn-default" />
+			</div>
+		</div>
+		<div>
+	@Html.ActionLink("Back to List", "AllOrders", "Orders")
+</div>
+
+	</div>
+}
+

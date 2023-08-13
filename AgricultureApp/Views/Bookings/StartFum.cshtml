@@ -1,0 +1,63 @@
+﻿
+@{
+	ViewBag.Title = "StartFum";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	var message = TempData["StartFum"] ?? string.Empty;
+}
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+
+<style>
+
+	form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin: 50px auto;
+		max-width: 600px;
+	}
+
+	label {
+		font-size: 1.2em;
+		margin: 20px 0;
+	}
+
+	input, textarea {
+		padding: 10px;
+		border-radius: 5px;
+		border: 2px solid #ccc;
+		margin: 0 0 20px;
+		width: 100%;
+		max-width: 400px;
+	}
+
+	textarea {
+		resize: vertical;
+		min-height: 100px;
+	}
+
+	button {
+		padding: 10px;
+		border-radius: 5px;
+		border: none;
+		background-color: #4CAF50;
+		color: #fff;
+		font-size: 1.2em;
+		cursor: pointer;
+	}
+
+		button:hover {
+			background-color: #3e8e41;
+		}
+</style>
+
+<center><h2>Start Fumigation</h2></center>
+
+<form id="confirm-form" method="post" action="@Url.Action("StartFum", "Bookings")">
+	<label for="password">Please confirm your password to start fumigation:</label>
+	<input type="text" name="pass" required>
+	<input type="submit" value="Start Fumigation" />
+</form>

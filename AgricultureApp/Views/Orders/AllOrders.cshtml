@@ -1,0 +1,212 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.Order>
+@using AgricultureApp.Models;
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	string id = null;
+	var message = TempData["AlertMessage"] ?? string.Empty;
+	double Total = 0.0;
+}
+
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+
+<style>
+
+	.table {
+		width: 100%;
+	}
+
+	.table_header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		padding: 20px;
+		background-color: rgb(240, 240, 240);
+	}
+
+		.table_header p {
+			color: #000000;
+		}
+
+	button {
+		outline: none;
+		border: none;
+		border-radius: 6px;
+		cursor: pointer;
+		padding: 10px;
+		color: #ffffff;
+	}
+
+	td button:nth-child(1) {
+		background-color: #0298cf;
+	}
+
+	td button:nth-child(2) {
+		background-color: #f80000;
+	}
+
+	padding: 10px 20px;
+
+	.add_new {
+		color: #ffffff;
+		background-color: #0298cf;
+	}
+
+	input {
+		padding: 10px 20px;
+		margin: 0 10px;
+		outline: none;
+		border: 1px solid #0298cf;
+		border-radius: 6px;
+		color: #0298cf;
+	}
+
+	.table_section {
+		height: 500px;
+		overflow: auto;
+	}
+
+	table {
+		width: 100%;
+		table-layout: fixed;
+		min-width: 900px;
+		border-collapse: collapse;
+	}
+
+	thead th {
+		position: sticky;
+		top: 0;
+		background-color: #f6f9fc;
+		color: #8493a5;
+		font-size: 15px;
+	}
+
+	th,
+	td {
+		border-bottom: 1px solid #dddddd;
+		padding: 10px 20px;
+		word-break: break-all;
+		width: 120px
+	}
+
+
+	tr:hover td {
+		color: #0298cf;
+		cursor: pointer;
+		background-color: #f6f9fc;
+	}
+
+	.pagination {
+		display: flex;
+		justify-content: flex-end;
+		width: 100%;
+		padding: 10px 20px;
+	}
+</style>
+
+
+<h2><b>Orders</b></h2>
+
+<div class="table">
+	<div class="table_header">
+		<p>Orders </p>
+	</div>
+	<div class="table_section">
+
+		@if (TempData["ErrorMessage"] != null)
+		{
+			<div class="alert alert-warning alert-dismissible">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<h4><i class="icon fa fa-check"></i> Alert!</h4>
+				@TempData["ErrorMessage"]
+			</div>
+		}
+		@using (Html.BeginForm(actionName: "COnfirmOrder", controllerName: "Orders", routeValues: null, method: FormMethod.Post))
+		{
+
+			<table>
+				<tr>
+					<th>
+						Status
+					</th>
+					<th>
+						Date made
+					</th>
+					<th>
+						Delivery Details
+					</th>
+					<th>Action</th>
+				</tr>
+
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							<b>Order Status :</b> @Html.DisplayFor(modelItem => item.OrderStatus) <br />
+							<b>Payment Status :</b> @Html.DisplayFor(modelItem => item.PaymentStatus) <br />
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.OrderDate)
+							<br />
+							<br />
+							<a class="btn btn-warning" target="_blank" href="~/Orders/ItemsIndex/@item.Id">View Ordered Items</a>
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.CustomerName)<address>@Html.DisplayFor(modelItem => item.CustomerEmail)</address>
+
+							<b> @Html.DisplayFor(modelItem => item.DeliveryAddress)</b>
+						</td>
+
+						
+						@if (item.OrderStatus == "Your order in now complete, thank you for shopping with us")
+						{
+							<td>
+								<p style="color:green">Order Completed</p>
+							</td>
+
+						}
+						@if (User.IsInRole("Assistant"))
+						{
+							if (item.OrderStatus == "Waiting for delivery preparation, please be patient")
+							{
+								<td>
+									<a href="@Url.Action("Process", "Orders", new { id = item.Id })" title="Process order" class="btn btn-success">Process order</a>
+								</td>
+							}
+
+							if (item.OrderStatus == "Order Processed, Please wait while we prepare shipment")
+							{
+								<td>
+									<a href="@Url.Action("shipmemntCreate", "Shipments", new { id = item.Id })" data-toggle="tooltip" data-placement="top" title="Procee order" class="btn btn-success"><i class="fa fa-edit"></i>Prepare Shipment</a>
+								</td>
+							}
+						}
+
+						@if (User.IsInRole("Driver"))
+						{
+							if (item.OrderStatus == "Ready for shipment")
+							{
+								<td>
+									<a class="btn btn-outline-success badge" href="@Url.Action("Ship", new { id = item.Id })" data-toggle="tooltip" data-placement="top" title="Confirm & Process"><i class="fa fa-check"></i> Accept Shipment </a>
+								</td>
+							}
+
+							if (item.OrderStatus == "Parcel on the way")
+							{
+								<td>
+									<a class="btn btn-outline-success badge" href="@Url.Action("Arrive", new { id = item.Id})" data-toggle="tooltip" data-placement="top" title="Order Arrived"><i class="fa fa-home"></i>Arrived </a>
+								</td>
+							}
+						}
+					</tr>
+				}
+			</table>
+
+		}
+	</div>
+</div>

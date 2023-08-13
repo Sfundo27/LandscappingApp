@@ -1,0 +1,97 @@
+﻿@model IEnumerable<AgricultureApp.Models.Appointment.Fumigation>
+
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+	.appointment-details-card {
+		background-color: #f8f9fa;
+		border-radius: 8px;
+		box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+		margin: auto;
+		padding: 20px;
+		width: 600px;
+		font-size:18px;
+	}
+
+	.appointment-details-row {
+		display: flex;
+		margin-bottom: 10px;
+	}
+
+	.appointment-details-label {
+		flex: 1;
+		font-weight: bold;
+		margin-right: 10px;
+	}
+
+	.appointment-details-value {
+		flex: 2;
+		font-size: 18px;
+	}
+</style>
+<div class="appointment-details-card">
+	<center>
+		<h2>My Appointment Details</h2>
+	</center>
+	<hr />
+	@foreach (var item in Model)
+	{
+		<div class="appointment-details-row">
+			<span class="appointment-details-label">Service:</span>
+			<span class="appointment-details-value">@item.FumService</span>
+		</div>
+
+		<div class="appointment-details-row">
+			<span class="appointment-details-label">Treatment:</span>
+			<span class="appointment-details-value">@item.Treatment</span>
+		</div>
+		if (item.FumService == "Outdoor")
+		{
+			<div class="appointment-details-row">
+				<span class="appointment-details-label">Price /&nbsp;㎡:</span>
+				<span class="appointment-details-value">@item.price.ToString("R0.00")</span>
+			</div>
+
+			<div class="appointment-details-row">
+				<span class="appointment-details-label">Width:</span>
+				<span class="appointment-details-value">@item.width m</span>
+			</div>
+
+			<div class="appointment-details-row">
+				<span class="appointment-details-label">Length:</span>
+				<span class="appointment-details-value">@item.length m</span>
+			</div>
+		}
+		else
+		{
+			<div class="appointment-details-row">
+				<span class="appointment-details-label">Price/Room:</span>
+				<span class="appointment-details-value">@item.price.ToString("R0.00")</span>
+			</div>
+
+			<div class="appointment-details-row">
+				<span class="appointment-details-label">Width:</span>
+				<span class="appointment-details-value">@item.NumberOfRooms Rooms</span>
+			</div>
+		}
+
+		<div class="appointment-details-row">
+			<span class="appointment-details-label">Total:</span>
+			<span style="font-size:24px; font-weight:bold" class="appointment-details-value">@item.Total.ToString("R0.00")</span>
+		</div>
+		<hr />
+		<div class="appointment-details-row" style="display:flex; justify-content:space-between">
+			<a class="btn btn-info" href="~/Bookings/Index/@item.bookingId">Back To Booking</a>
+			@if (item.isPaid == false)
+			{
+				<a class="btn btn-success" href="@Url.Action("OnceOff", "PaymentBook",new { TotalPrice = item.Total,id=item.Id,bookId=item.bookingId })">Make Payment</a>
+			}
+			@if (item.isPaid == true)
+			{
+				<a class="btn btn-default" style="background-color:black" href="@Url.Action("BookingInvoice", "Bookings",new {id=item.bookingId })">My Invoice</a>
+			}
+		</div>
+	}
+</div>

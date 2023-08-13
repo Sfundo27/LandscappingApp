@@ -1,0 +1,59 @@
+﻿@model IEnumerable<AgricultureApp.Models.Appointment.FumTreatment>
+
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+@if (ViewBag.bookingId == null)
+{
+
+	<p style="display:flex;">
+		<a class="btn btn-success" href="~/FumTreatments/Create/@ViewBag.ServiceId">Add Treatment</a>
+		| <a class="btn btn-warning" href="~/FumServices/Index">Back To Services</a>
+	</p>
+}
+<hr />
+<table class="table">
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.ServiceId)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Treatment)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Price)
+		</th>
+		<th></th>
+	</tr>
+
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.ServiceId)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Treatment)
+			</td>
+			<td>
+				R @Html.DisplayFor(modelItem => item.Price).00
+			</td>
+			<td>
+				@if (User.IsInRole("Admin"))
+				{
+					@Html.ActionLink("Edit -- ", "Edit", new { id = item.Id }) 
+					@Html.ActionLink("Details -- ", "Details", new { id = item.Id }) 
+					@Html.ActionLink("Delete", "Delete", new { id = item.Id })
+				}
+				else
+				{
+					<a href="~/Fumigations/Create/@item.Id?bookingId=@ViewBag.bookingId&serviceId=@ViewBag.ServiceId"> Pick Treatment </a>
+				}
+			</td>
+		</tr>
+	}
+
+</table>

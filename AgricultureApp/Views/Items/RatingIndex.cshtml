@@ -1,0 +1,193 @@
+﻿@model IEnumerable<AgricultureApp.Models.Ratingz.Rating>
+
+@{
+	ViewBag.Title = "RatingIndex";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+
+	h1 {
+		position: relative;
+		top: 10px;
+		left: 50%;
+		margin-bottom: 20px;
+		text-shadow: 2px 1px #aaaaaa;
+	}
+
+	.wrapper {
+		width: 700px;
+		padding: 20px 40px 20px 0px;
+		margin: auto;
+		background-color: #ffffff;
+		border: 2px solid #777777;
+		border-radius: 20px;
+		box-shadow: 2px 2px 15px #777777;
+	}
+
+	ul.twocolumn,
+	ol.twocolumn {
+		-moz-column-count: 1;
+		-moz-column-gap: 5px;
+		-ms-column-count: 1;
+		-ms-column-gap: 5px;
+		-webkit-column-count: 1;
+		-webkit-column-gap: 5px;
+		column-count: 1;
+		column-gap: 5px;
+		color: #cccccc;
+		list-style-position: inside;
+	}
+
+	.link .hide-list {
+		height: 0px;
+		overflow: hidden;
+	}
+
+	.link {
+		padding: 10px 10px 0 10px;
+		margin: 10px;
+		background-color: #eeeeee;
+		border-radius: 15px;
+		box-shadow: 1px 1px 8px #777777;
+		overflow: hidden;
+	}
+
+	h3 {
+		display: inline-block;
+		text-decoration: underline;
+		font-weight: bold;
+		margin-left: 10px;
+		color: #000000;
+	}
+
+	p {
+		margin: -15px 0 0 46px;
+		color: #555555;
+		text-align: justify;
+	}
+
+	.link .fas.fa-user-circle {
+		font-size: 36px;
+	}
+
+	p .fas.fa-heart {
+		padding: 5px 10px 5px 192px;
+		margin: 20px 0 0 -60px;
+		color: #ffffff;
+		font-size: 16px;
+		word-wrap: normal;
+		background: #cccccc;
+		border-top: 1px solid #000000;
+	}
+
+	p .fas.fa-comment-alt {
+		padding: 5px 75px 5px 75px;
+		margin: 20px 0 0 -4px;
+		color: #ffffff;
+		font-size: 16px;
+		word-wrap: normal;
+		background: #cccccc;
+		border-top: 1px solid #000000;
+	}
+
+	p .fas.fa-eye {
+		padding: 5px 193px 5px 10px;
+		margin: 20px -60px 0 0px;
+		color: #ffffff;
+		font-size: 16px;
+		word-wrap: normal;
+		background: #cccccc;
+		border-top: 1px solid #000000;
+	}
+
+	.reply {
+		display: block;
+		width: 113%;
+		margin-left: -60px;
+		padding: 10px 0 15px 100px;
+		color: #0000ff;
+		background-color: #cccccc;
+		cursor: pointer;
+	}
+
+	div.form-horizontal {
+		padding:5%;
+		height: 600px;
+		overflow: auto;
+		text-align: justify;
+	}
+</style>
+<center><h2>Rated by <b>@ViewBag.count</b> user(s)</h2></center>
+<div class="form-horizontal">
+	<ul class="fa-ul twocolumn" style=" ">
+
+		@foreach (var item in Model)
+		{
+			<li class="link">
+				<h3>@item.CustomerID</h3>
+				<p style="margin-top:2%">@item.Comment</p>
+				<br />
+				<div style="display:flex; justify-content:space-between; width:20%; margin-bottom:2%">
+					@if (item.Rank == 1)
+					{
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/Star.png" style="height:40px; width:40px" />
+						<img src="~/Images/Star.png" style="height:40px; width:40px" />
+						<img src="~/Images/Star.png" style="height:40px; width:40px" />
+						<img src="~/Images/Star.png" style="height:40px; width:40px" />
+					}
+					else if (item.Rank == 2)
+					{
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/Star.png" style="height:40px; width:40px" />
+						<img src="~/Images/Star.png" style="height:40px; width:40px" />
+						<img src="~/Images/Star.png" style="height:40px; width:40px" />
+					}
+					else if (item.Rank == 3)
+					{
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/Star.png" style="height:40px; width:40px" />
+						<img src="~/Images/Star.png" style="height:40px; width:40px" />
+					}
+					else if (item.Rank == 4)
+					{
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/Star.png" style="height:40px; width:40px" />
+					}
+					else if (item.Rank == 5)
+					{
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+						<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					}
+				</div>
+			</li>
+		}
+	</ul>
+</div>
+
+<script>
+
+	var reply = document.querySelector(".reply");
+	var list = document.querySelector(".hide-list");
+
+	reply.onclick = function () {
+		if (list.style.height == "auto") {
+			list.style.height = "0px";
+		} else {
+			list.style.height = "auto";
+		}
+	};
+
+
+</script>

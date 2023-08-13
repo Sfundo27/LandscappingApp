@@ -1,0 +1,60 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.Order>
+
+@{
+    ViewBag.Title = "MyIndex";
+}
+
+<h2>MyIndex</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CustomerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CustomerEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CustomerName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CustomerEmail)
+        </td>  
+        <td>
+            @Html.DisplayFor(modelItem => item.Total)
+        </td>
+		<td>
+			<a href="~/Orders/Index/@item.Id">Preview</a>
+			@if (item.isPaid == true)
+			{
+				<hr />
+				<a href="~/Shipments/Invoice/@item.Id">Invoice</a>
+			}
+		</td>
+    </tr>
+}
+
+</table>

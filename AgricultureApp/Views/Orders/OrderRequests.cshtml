@@ -1,0 +1,213 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.Order>
+@using AgricultureApp.Models;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    string id = null;
+    var message = TempData["AlertMessage"] ?? string.Empty;
+}
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+
+<style type="text/css">
+    .stepwizard-step p {
+        margin-top: 10px;
+    }
+
+    .stepwizard-row {
+        display: table-row;
+    }
+
+    .stepwizard {
+        display: table;
+        width: 100%;
+        position: relative;
+    }
+
+    .stepwizard-step button[disabled] {
+        opacity: 1 !important;
+        filter: alpha(opacity=100) !important;
+    }
+
+    .stepwizard-row:before {
+        top: 14px;
+        bottom: 0;
+        position: absolute;
+        content: " ";
+        width: 100%;
+        height: 1px;
+        background-color: #ccc;
+        z-order: 0;
+    }
+
+    .stepwizard-step {
+        display: table-cell;
+        text-align: center;
+        position: relative;
+    }
+
+    .btn-circle {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        padding: 6px 0;
+        font-size: 12px;
+        line-height: 1.428571429;
+        border-radius: 15px;
+    }
+</style>
+@if (TempData["Success123"] != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <h4><i class="icon fa fa-check"></i> Success!</h4>
+        @TempData["Success123"]
+    </div>
+}
+@if (Model.Count() <= 0)
+{
+    <section class="ad-post bg-gray py-5">
+        <div class="container">
+            <h2 class="title text-center">My Order</h2>
+            <fieldset class="border border-gary p-4 mb-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-warning">
+                            <b>Note :</b> No order available at the moment.
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </section>
+}
+else
+{
+
+    foreach (var model in Model)
+    {
+        using (Html.BeginForm("Edit", "CarHirings", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <section class="ad-post bg-gray py-5">
+                <div class="container">
+                    <h2 class="title text-center">@Html.DisplayFor(modelItem => model.CustomerName)'s Order</h2>
+                    <fieldset class="border border-gary p-4 mb-5">
+                        <div class="row">
+                            <div class="stepwizard">
+                                <div class="stepwizard-row">
+                                    <div class="stepwizard-step">
+                                        @if (model.OrderStatus.ToLower().Contains("Requested".ToLower()))
+                                        {
+                                            <button type="button" class="btn btn-success btn-circle">1</button><i class="fa fa-check"></i>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-primary btn-circle">1</button>
+                                        }
+                                        <p>Service requested</p>
+                                    </div>
+                                    <div class="stepwizard-step">
+                                        @if (model.OrderStatus.ToLower().Contains("Inprogress".ToLower()))
+                                        {
+                                            <button type="button" class="btn btn-success btn-circle">2</button><i class="fa fa-check"></i>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-primary btn-circle">2</button>
+                                        }
+                                        <p>In progress</p>
+                                    </div>
+                                    <div class="stepwizard-step">
+                                        @if (model.OrderStatus.ToLower().Contains("Ready for delivery".ToLower()))
+                                        {
+                                            <button type="button" class="btn btn-success btn-circle">3</button><i class="fa fa-check"></i>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-primary btn-circle">3</button>
+                                        }
+                                        <p>Ready for delivery</p>
+                                    </div>
+                                    <div class="stepwizard-step">
+                                        @if (model.OrderStatus.ToLower().Contains("On it way".ToLower()))
+                                        {
+                                            <button type="button" class="btn btn-success btn-circle">4</button><i class="fa fa-check"></i>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-primary btn-circle">4</button>
+                                        }
+                                        <p>On it way</p>
+                                    </div>
+                                    <div class="stepwizard-step">
+                                        @if (model.OrderStatus.ToLower().Equals("Delivered".ToLower()))
+                                        {
+                                            <button type="button" class="btn btn-success btn-circle">5</button><i class="fa fa-check"></i>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-primary btn-circle">5</button>
+                                        }
+                                        <p>Delivered</p>
+                                    </div>
+                                    <div class="stepwizard-step">
+                                        @if (model.OrderStatus.ToLower().Equals("Accepted".ToLower()))
+                                        {
+                                            <button type="button" class="btn btn-success btn-circle">6</button><i class="fa fa-check"></i>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-primary btn-circle">6</button>
+                                        }
+                                        <p>Completed</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <section class="ftco-section">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-6 mb-5 ftco-animate">
+                                        <a href="data:image/png;base64,@Convert.ToBase64String(model.Picture, 0, model.Picture.Length)" class="image-popup"><img src="data:image/png;base64,@Convert.ToBase64String(model.Picture, 0, model.Picture.Length)" style="width:400px;height:350px;" class="img-fluid" alt="Colorlib Template"></a>
+                                    </div>
+                                    <div class="col-lg-6 product-details pl-md-5 ftco-animate">
+                                        <p>
+                                            Order Status:  <b> @Html.DisplayFor(modelItem => model.OrderStatus)</b>
+                                        </p>
+                                        <p>
+                                            Date:  @Html.DisplayFor(modelItem => model.OrderDate)
+                                        </p>
+                                        <p>
+                                            Email:  @Html.DisplayFor(modelItem => model.CustomerEmail)
+                                        </p>
+                                        <p>
+                                            Full Name:  @Html.DisplayFor(modelItem => model.CustomerName) 
+                                        </p>
+                                        <p>
+                                            Delivery Address: @Html.DisplayFor(modelItem => model.DeliveryAddress)
+                                        </p>
+                                        <p>
+                                            Total Order Amount: R  <b> @Html.DisplayFor(modelItem => model.Total)</b>
+                                        </p>
+                                        <a href="@Url.Action("Update", "FoodOrders", new { id = model.Id })" data-toggle="tooltip" data-placement="top" title="Update" class="btn btn-outline-success"><i class="fa fa-edit"></i></a>
+                                        @if (model.OrderStatus == "Delivered")
+                                        {
+                                            <a class="btn btn-success badge" href="@Url.Action("AcceptOrder", new { id = model.Id })"> Accept order</a>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </fieldset>
+                </div>
+            </section>
+        }
+    }
+}
+

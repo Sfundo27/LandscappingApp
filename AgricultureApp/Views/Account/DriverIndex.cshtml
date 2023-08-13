@@ -1,0 +1,102 @@
+﻿@model IEnumerable<AgricultureApp.Models.Users.Driver>
+@{
+	ViewBag.Title = "DriverIndex";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<style>
+	.card {
+		position: relative;
+		background-color: ghostwhite;
+		width: stretch;
+		height: stretch;
+		height: 350px;
+		color: black;
+		font-weight: 500;
+		border-radius: 10px;
+		/*border: 2px solid #fe1104;*/
+		box-shadow: 2px 2px 8px #0d3050;
+		padding: 10px;
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+	}
+
+	.title {
+		color: grey;
+		font-size: 18px;
+	}
+
+	button {
+		border: none;
+		outline: 0;
+		display: inline-block;
+		padding: 8px;
+		color: white;
+		background-color: #000;
+		text-align: center;
+		cursor: pointer;
+		width: 100%;
+		font-size: 18px;
+	}
+
+
+
+		button:hover, a:hover {
+			opacity: 0.7;
+		}
+
+	.place {
+		width: 100%;
+		margin: 0 auto auto auto;
+		width: 90%
+	}
+
+	.col-lg-12 {
+		display: flex;
+		justify-content: space-evenly;
+	}
+</style>
+
+
+
+<div class="place">
+	<h2 class="font-weight-bold" style="text-align:center;">Available AgricultureApp Drivers</h2><br /><hr />
+	<a class="btn btn-info" href="~/Account/Driver">NEW DRIVER</a><br /><br />
+	<div class="col-lg-12">
+		@if (Model.Count() == 0)
+		{
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-warning">
+						<b>Note :</b> No driver available added at the moment.
+					</div>
+				</div>
+			</div>
+		}
+
+		else
+		{
+			foreach (var item in Model)
+			{
+
+				<div class="card">
+					<img src="data:image/png;base64,@Convert.ToBase64String(item.DriverImage, 0, item.DriverImage.Length)" style="width: auto; height: 130px" />
+					<div class="card-body">
+						<h5 class="card-title">@Html.DisplayFor(modelItem => item.FirstName)  @Html.DisplayFor(modelItem => item.LastName)</h5>
+						<p class="card-text">Position: Driver</p>
+						<p class="card-text">Status: @Html.DisplayFor(modelItem => item.DriverStatus)</p>
+						<p class="card-text">Email: @Html.DisplayFor(modelItem => item.Email)</p>
+						<p class="card-text">Phone: @Html.DisplayFor(modelItem => item.ContactNo)</p>
+					</div>
+				</div>
+
+			}
+
+		}
+
+	</div>
+</div>
+

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<AgricultureApp.Models.Appointment.FumService>
+
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+	@Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.service)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.descr)
+		</th>
+		<th></th>
+	</tr>
+
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.service)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.descr)
+			</td>
+			<td>
+				@if (User.IsInRole("Admin"))
+				{
+					<a href="~/FumTreatments/Create/@item.Id">Add Treatment</a>
+					<a href="~/FumTreatments/Index/@item.Id"> View Treatment </a>
+				}
+				else
+				{
+					<a href="~/FumTreatments/Index/@item.Id?bookingId=@ViewBag.BookingId"> Pick Service </a>
+				}
+			</td>
+		</tr>
+	}
+
+</table>

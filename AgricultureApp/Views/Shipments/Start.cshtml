@@ -1,0 +1,121 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.Order>
+@{
+	ViewBag.Title = "Start";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	var message = TempData["Start"] ?? string.Empty;
+}
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+
+<style>
+	b{
+		font-size:20px;
+	}
+</style>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<style>
+	/* Always set the map height explicitly to define the size of the div
+		* element that contains the map. */
+	#map {
+		margin-top: 10px;
+		height: 70%;
+		height: 400px;
+		margin: auto;
+	}
+	/* Optional: Makes the sample page fill the window. */
+
+	.controls {
+		margin-top: 10px;
+		border: 1px solid transparent;
+		border-radius: 2px 0 0 2px;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		outline: none;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+	}
+
+	#origin-input,
+	#destination-input {
+		background-color: #fff;
+		font-family: Roboto;
+		font-size: 15px;
+		font-weight: 300;
+	}
+
+		#origin-input:focus,
+		#destination-input:focus {
+			border-color: #4d90fe;
+		}
+
+	#mode-selector {
+		color: #fff;
+		background-color: #4d90fe;
+		padding: 5px 11px 0px 11px;
+	}
+
+		#mode-selector label {
+			font-family: Roboto;
+			font-size: 13px;
+			font-weight: 300;
+		}
+</style>
+<div style="background-color:#68f63fa6; padding:5%">
+	@foreach (var i in Model)
+	{
+		<h1>Directions</h1>
+		<hr />
+		<h4>Driving Directions from <b>@ViewBag.Starting</b> to <b>@ViewBag.Location</b></h4>
+		<hr />
+	}
+	<div id="map"></div>
+	<hr />
+	<form @Url.Action("Start", "Shipments") method="post">
+		<input class="btn btn-warning" type="submit" value="Call for PickUp" />
+	</form>
+</div>
+<script>
+    function initMap() {
+        var directionsService = new google.maps.DirectionsService();
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 7,
+            center: { lat: 37.7749, lng: -122.4194 } // default center
+        });
+        directionsRenderer.setMap(map);
+
+        // get starting location and destination
+        var start = "@ViewBag.Starting";
+        var end = "@ViewBag.Location";
+
+        // create request for directions service
+        var request = {
+            origin: start,
+            destination: end,
+            travelMode: 'DRIVING'
+        };
+
+        // call directions service
+        directionsService.route(request, function(result, status) {
+            if (status == 'OK') {
+                directionsRenderer.setDirections(result);
+                var distance = result.routes[0].legs[0].distance.text;
+                var duration = result.routes[0].legs[0].duration.text;
+                var distanceOutput = document.getElementById('distance');
+                var durationOutput = document.getElementById('duration');
+                distanceOutput.value = distance;
+                durationOutput.value = duration;
+            } else {
+                alert('Directions request failed due to ' + status);
+            }
+        });
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3t1HngBwIECcsZYIOrJWglLMBV1UbWU0&libraries=places&callback=initMap"
+		async defer></script>
+

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<AgricultureApp.Models.Appointment.FumTreatment>
+@using AgricultureApp.Models
+@{
+	ViewBag.Title = "PickIndex";
+	ApplicationDbContext db = new ApplicationDbContext();
+	string service = "";
+	foreach (var i in Model)
+	{
+		var fum = db.FumServices.Where(d => d.Id == i.ServiceId).FirstOrDefault();
+		service = fum.service;
+	}
+}
+<style>
+	.service-card {
+		width: 200px;
+		height: 400px;
+		background-color: #8BC34A;
+		border-radius: 10px;
+		box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+		padding: 2%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		transition: box-shadow 0.3s ease-out;
+	}
+
+		.service-card:hover {
+			box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.25);
+		}
+
+	.service-name {
+		font-size: 24px;
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+
+	.service-description {
+		font-size: 18px;
+		margin: 0;
+	}
+</style>
+<center><h2>Pick Service Treatment</h2></center>
+<hr />
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+	@foreach (var item in Model)
+	{
+		<div class="service-card" style="width: calc(50% - 10px); margin-bottom: 20px;">
+			<h3 class="service-name">@item.Treatment</h3>
+			<hr />
+			@if (service == "Outdoor")
+			{
+				<p class="service-description">@item.Price.ToString("R0.00") /&nbsp;㎡</p>
+			}
+			else
+			{
+				<p class="service-description">@item.Price.ToString("R0.00") /Room</p>
+			}
+			<hr />
+			@if (service == "Outdoor")
+			{
+				<a class="btn btn-warning" href="~/Fumigations/Create/@item.Id?bookingId=@ViewBag.bookingId&serviceId=@ViewBag.ServiceId">Pick Treatment</a>
+			}
+			else
+			{
+				<a class="btn btn-warning" href="~/Fumigations/IndoorCreate/@item.Id?bookingId=@ViewBag.bookingId&serviceId=@ViewBag.ServiceId">Pick Treatment</a>
+			}
+
+		</div>
+	}
+</div>
+

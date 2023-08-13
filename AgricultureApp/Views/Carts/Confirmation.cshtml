@@ -1,0 +1,56 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.Order>
+
+@{
+	ViewBag.Title = "Confirmation";
+}
+
+
+<style>
+	.confirmation {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 20px;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		text-align:center;
+	}
+
+	h2 {
+		margin-top: 0;
+	}
+
+	p {
+		margin: 10px 0;
+	}
+
+	.btn {
+		display: inline-block;
+		padding: 8px 16px;
+		border-radius: 4px;
+		font-size: 16px;
+		text-decoration: none;
+		background-color: #4CAF50;
+		color: #fff;
+		border: none;
+	}
+
+		.btn:hover {
+			background-color: #3e8e41;
+		}
+</style>
+
+
+@foreach (var item in Model)
+{
+	<div class="confirmation">
+		<h2>Order Confirmation</h2>
+
+		<p>Your order has been placed successfully. Please view order deatils for info</p>
+
+		<p>Order ID: @item.OrderNo</p>
+
+		<p>Total amount: R @item.Total</p>
+
+		<a href="@Url.Action("Index", "Orders", new { id = item.Id })" class="btn">View Order Details</a>
+	</div>
+}

@@ -1,0 +1,206 @@
+﻿@model AgricultureApp.Models.Product.Order
+@using AgricultureApp.Models;
+@{
+    ViewBag.Title = "Ship";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string id = null;
+    var message = TempData["AlertMessage"] ?? string.Empty;
+}
+
+<style>
+
+    .containers {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        margin: 50px 0 50px 0;
+    }
+
+    .row {
+        display: flex;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .col {
+        width: 100%;
+        float: left;
+    }
+
+    .card {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 0.10rem
+    }
+
+    .card-header:first-child {
+        border-radius: calc(0.37rem - 1px) calc(0.37rem - 1px) 0 0
+    }
+
+    .card-header {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 0;
+        background-color: #fff;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+    }
+
+    .track {
+        position: relative;
+        background-color: #ddd;
+        height: 7px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        margin-bottom: 60px;
+        margin-top: 50px
+    }
+
+        .track .step {
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            width: 25%;
+            margin-top: -18px;
+            text-align: center;
+            position: relative
+        }
+
+            .track .step.active:before {
+                background: #FF5722
+            }
+
+            .track .step::before {
+                height: 7px;
+                position: absolute;
+                content: "";
+                width: 100%;
+                left: 0;
+                top: 18px
+            }
+
+            .track .step.active .icon {
+                background: #ee5435;
+                color: #fff
+            }
+
+        .track .icon {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            position: relative;
+            border-radius: 100%;
+            background: #ddd
+        }
+
+        .track .step.active .text {
+            font-weight: 400;
+            color: #000
+        }
+
+        .track .text {
+            display: block;
+            margin-top: 7px
+        }
+
+    .itemside {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        width: 100%
+    }
+
+        .itemside .aside {
+            position: relative;
+            -ms-flex-negative: 0;
+            flex-shrink: 0
+        }
+
+    .img-sm {
+        width: 80px;
+        height: 80px;
+        padding: 7px
+    }
+
+    ul.row, ul.row-sm {
+        list-style: none;
+        padding: 0
+    }
+
+    .itemside .info {
+        padding-left: 15px;
+        padding-right: 7px
+    }
+
+    .itemside .title {
+        display: block;
+        margin-bottom: 5px;
+        color: #212529
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 1rem
+    }
+
+    .btn-warning {
+        color: #ffffff;
+        background-color: #ee5435;
+        border-color: #ee5435;
+        border-radius: 1px
+    }
+
+        .btn-warning:hover {
+            color: #ffffff;
+            background-color: #ff2b00;
+            border-color: #ff2b00;
+            border-radius: 1px
+        }
+</style>
+
+@using (Html.BeginForm("Ship", "Orders", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="containers">
+        <article class="card">
+            <div class="card-body">
+                <h6>Request ID: @Model.Id</h6>
+                <article class="card">
+                    <div class="card-body row">
+                        <div class="col" style="margin:0 15px 0 0">
+                            @if (Model.Picture != null)
+                            {
+                                var base64 = Convert.ToBase64String(inArray: Model.Picture);
+                                var imgSrc = string.Format(format: "data:image/gif;base64,{0}", arg0: base64);
+                                <span class="group"> <img src="@imgSrc " style="width:150px;height:150px;" /> </span>
+                            }
+                        </div>
+                        <div class="col">
+                            <strong>Customer Details:</strong>
+                            <br><i class="fa fa-id-card"></i> @Model.CustomerName
+                            <br>	<i class="fa fa-envelope"></i>    @Model.CustomerEmail
+                        </div>
+                        <div class="col" style="margin:0 0 0 20px">
+                            <strong>Status :</strong> @Model.OrderStatus
+                            <br /><b>Estimated Delivery Day :</b> @Html.EditorFor(m => m.expDelDate, new { @class = "border w-100 p-2 bg-white text-capitalize" })
+                        </div>
+                    </div>
+                </article>
+                <input type="submit" value="Ship Parcel" class="btn btn-success" />
+            </div>
+        </article>
+    </div>
+}
+

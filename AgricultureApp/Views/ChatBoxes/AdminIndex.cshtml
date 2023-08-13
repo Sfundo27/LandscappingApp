@@ -1,0 +1,230 @@
+﻿@model IEnumerable<AgricultureApp.Models.Chat.ChatBox>
+@{
+	ViewBag.Title = "AdminIndex";
+	string currentDate = DateTime.Now.ToLongDateString();
+	int id = 0;
+}
+<link href="~/Style/Chat.css" rel="stylesheet" />
+<style>
+	.main-too {
+		background-color: rgba(255, 255, 255, 0.04);
+		aspect-ratio: 13/16;
+		width: 200px;
+		height: 600px;
+		text-align: center;
+		position: absolute;
+		left: 25%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		border-radius: 30px;
+		backdrop-filter: blur(4px);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		overflow: hidden;
+		transition: transform 1s ease, width 1s ease;
+		background-color: #808080;
+	}
+
+	.chats-list {
+		margin: 10px;
+	}
+
+	.chat-item {
+		padding: 10px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+		position: relative; /* Added position relative */
+		cursor: pointer; /* Added cursor pointer */
+	}
+
+		.chat-item.unread {
+			font-weight: bold;
+		}
+
+		.chat-item.selected {
+			background-color: #2ecc71; /* Update the background color for selected chat item */
+			color: white; /* Update the text color for selected chat item */
+		}
+
+	.notification {
+		position: absolute;
+		top: 50%;
+		right: -10px; /* Adjusted positioning */
+		transform: translate(50%, -50%); /* Center the notification vertically */
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background-color: red;
+		color: white;
+		font-size: 12px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	hr {
+		border-color: rgba(255, 255, 255, 0.3);
+		margin: 10px;
+	}
+</style>
+<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.2.1/css/all.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+<div style="display:flex; justify-content:space-evenly;">
+	<div class="main-too">
+		<h2>Chats List</h2>
+		<hr />
+		<div class="chats-list">
+			@foreach (var i in ViewBag.Chat)
+			{
+				<div class="chat-item" onclick="handleChatClick('@i.Id', this)">
+					<p style="font-size:16px;">@i.Email</p>
+				</div>
+			}
+		</div>
+	</div>
+	<div class="main">
+		<div class="header">
+			<div class="center">
+				<div>
+					<i style="font-size:30px" class="fa fa-user"></i>
+					<p id="pfpname">@ViewBag.Name</p>
+				</div>
+			</div>
+		</div>
+		@if (Model.Count() == 0)
+		{
+			<div class="content">
+				<div style="padding:11px;">
+					<p style="color:black; font-size:20px;	">Click User To View Chat</p>
+				</div>
+			</div>
+		}
+		else
+		{
+			<div class="content">
+				<div style="padding:11px;">
+					<div class="msg-btn-holder">
+						@foreach (var i in Model)
+						{
+							if (i.sender == "Admin@Agric.com")
+							{
+								if (i.date != currentDate)
+								{
+									currentDate = i.date;
+									<p>@i.date</p>
+								}
+
+								<div class="sender-msg msg-btn">
+									<p>@i.message</p>
+								</div><br><br><br>
+							}
+							else if (i.sender != "Admin@Agric.com")
+							{
+								if (i.date != currentDate)
+								{
+									currentDate = i.date;
+									<p>@i.date</p>
+								}
+
+								<div class="receiver-msg msg-btn">
+									<p>@i.message</p>
+								</div><br><br><br>
+							}
+							{
+								id = i.chatterId;
+							}
+						}
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<form method="post" action="@Url.Action("AdminCreate","ChatBoxes")" style="width:100%;padding:11px;">
+					<input placeholder="Message" required id="message" class="text-box" name="message">
+					<input type="hidden" required id="chatterId" value="@id" name="id">
+					<div class="send-ico">
+						<button class="btn btn-success" style="position:absolute;" id="submit">Send</button>
+					</div>
+				</form>
+			</div>
+		}
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		$('form').submit(function (e) {
+			e.preventDefault(); // Prevent the default form submission
+
+			// Get the form data
+			var formData = $(this).serialize();
+
+			// Make the AJAX request
+			$.ajax({
+				type: 'POST', // Or 'GET' if your server supports GET requests
+				url: $(this).attr('action'), // Get the form action URL
+				data: formData,
+				success: function (response) {
+					// Handle the response from the server
+					// Update your chat display or perform any other necessary actions
+
+					// Example: Append the new message to the container
+					var newMessage = '<div class="sender-msg msg-btn"><p>' + response.message + '</p></div><br><br><br>';
+					$('.msg-btn-holder').append(newMessage);
+
+					// Clear the message input field after successful submission
+					$('#message').val('');
+				},
+				error: function (xhr, status, error) {
+					// Handle any errors that occur during the AJAX request
+				}
+			});
+		});
+	});
+
+
+	// Keep track of the currently selected chat item
+	var selectedChatItem = null;
+
+	// Function to handle chat click event
+	function handleChatClick(chatId, element) {
+		// Remove the 'selected' class from the previously selected chat item
+		if (selectedChatItem) {
+			selectedChatItem.classList.remove('selected');
+		}
+
+		// Update the selected chat item and add the 'selected' class
+		selectedChatItem = element;
+		selectedChatItem.classList.add('selected');
+
+		// Update the URL without reloading the page
+		var newUrl = 'https://2023grp33.azurewebsites.net/ChatBoxes/AdminIndex/' + chatId;
+		window.history.pushState({ chatId: chatId }, '', newUrl);
+		// Perform actions to update the view based on the new URL
+		updateView(chatId);
+	}
+
+	// Function to update the view based on the URL
+	function updateView(chatId) {
+		// Perform necessary actions to update the view based on the chatId or other URL parameters
+		// You can make AJAX calls or modify the DOM to reflect the changes
+		// Example:
+		$.ajax({
+			url: '/ChatBoxes/AdminIndex/' + chatId,
+			type: 'GET',
+			success: function (response) {
+				// Update the view with the retrieved HTML
+				$('.main').html(response);
+			}
+		});
+	}
+
+	// Function to handle popstate event (when the URL changes)
+	window.onpopstate = function (event) {
+		// Retrieve the chatId from the state object
+		var chatId = event.state ? event.state.chatId : null;
+
+		// Perform actions to update the view based on the new URL
+		updateView(chatId);
+	};
+
+</script>

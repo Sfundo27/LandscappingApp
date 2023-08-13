@@ -1,0 +1,218 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.CartItem>
+@using Microsoft.AspNet.Identity;
+@using AgricultureApp.Models;
+@{
+	ViewBag.Title = "GetMyCart";
+	var mess = TempData["GetMyCart"] ?? null;
+}
+<script>
+	var msg = '@mess'
+	if (msg)
+		alert(msg)
+</script>
+
+<style>
+
+	/* Cart container */
+	.cart-container {
+		margin: 20px auto;
+		max-width: 800px;
+	}
+
+	/* Table styles */
+	.cart-table {
+		width: 100%;
+		border-collapse: collapse;
+		border-spacing: 0;
+		background-color: #fff;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	}
+
+		.cart-table th,
+		.cart-table td {
+			padding: 10px;
+			text-align: left;
+		}
+
+		.cart-table th {
+			background-color: #eee;
+		}
+
+		.cart-table td.product-thumbnail img {
+			display: block;
+			max-width: 80px;
+		}
+
+		.cart-table td.product-name a {
+			display: block;
+			font-weight: bold;
+			color: #333;
+		}
+
+		.cart-table td.product-price {
+			font-weight: bold;
+		}
+
+		.cart-table td.product-quantity input {
+			width: 50px;
+			padding: 5px;
+			text-align: center;
+		}
+
+		.cart-table td.product-subtotal {
+			font-weight: bold;
+		}
+
+	/* Button styles */
+	.cart-btn {
+		display: inline-block;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 3px;
+		background-color: #8BC34A;
+		color: #fff;
+		text-align: center;
+		cursor: pointer;
+	}
+
+		.cart-btn:hover {
+			background-color: #555;
+		}
+
+	.update-btn,
+	.remove-btn,
+	.clear-cart-btn {
+		margin-right: 10px;
+	}
+
+	.checkout-btn {
+		display: block;
+		margin: 20px auto;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 3px;
+		background-color: #8BC34A;
+		color: #fff;
+		text-align: center;
+		text-decoration: none;
+		cursor: pointer;
+		width:100px
+	}
+
+		.checkout-btn:hover {
+			background-color: #3e8e41;
+		}
+
+	.clear-cart-btn {
+		background-color: #f44336;
+	}
+
+		.clear-cart-btn:hover {
+			background-color: #d32f2f;
+		}
+
+	/* Cart buttons container */
+	.cart-buttons {
+		text-align: right;
+		margin-top: 20px;
+	}
+
+	table {
+		border: 2px solid #8BC34A;
+		border-collapse: collapse;
+	}
+
+	th, td {
+		border: 1px solid #8BC34A;
+		padding: 8px;
+		text-align: left;
+	}
+</style>
+
+<center><h2>Shopping Cart</h2></center>
+
+<hr />
+
+<div class="cart-container">
+	<form method="post" action="@Url.Action("UpdateCart", "Carts")">
+		<table class="cart-table">
+			<thead>
+				<tr>
+					<th>Product</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Subtotal</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					ApplicationDbContext db = new ApplicationDbContext();
+					var userId = User.Identity.GetUserId();
+					var cart = db.Carts.Where(d => d.UserId == userId).FirstOrDefault();
+					var cartItem = db.CartItems.Where(d => d.userID == userId).ToList();
+					double cartTotal = 0;
+					if (cartItem != null && cartItem.Any())
+					{
+						cartTotal = cartItem.Sum(c => c.price);
+					}
+					<tr>
+						@*<td class="product-thumbnail"><img src="@item.ImageUrl" alt="@item.ProductName"></td>*@
+						<td class="product-name"><a href="@Url.Action("Details", "Items	", new { id = item.itemID })">@item.Product</a></td>
+						<td class="product-price">@item.price.ToString("R0.00")</td>
+						<td class="product-quantity">
+							<input type="number" min="1" value="@item.Quantity" id="quantity-@item.Id" data-id="@item.Id" />
+						</td>
+						<td class="product-subtotal">
+							@{
+								int quantity = item.Quantity;
+								double price = item.price;
+								double total = quantity * price;
+							}
+							@total.ToString("R0.00")
+						</td>
+						<td>
+							<a href="#" class="cart-btn remove-btn" id="update-cart-@item.Id">Update</a>
+							<a href="@Url.Action("RemoveItem", "Carts", new { id = item.Id })" class="cart-btn remove-btn">X</a>
+						</td>
+					</tr>
+				}
+				<tr>
+					<td colspan="3">Total:</td>
+					<td colspan="2">@ViewBag.Total.ToString("R0.00")</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+
+	<div class="cart-buttons">
+		@{ ApplicationDbContext DB = new ApplicationDbContext();
+			var UserId = User.Identity.GetUserId();
+			var CartItem = DB.CartItems.Where(d => d.userID == UserId).ToList();}
+		@if (CartItem.Count() != 0)
+		{
+			<form method="post" action="@Url.Action("ClearCart", "Carts")">
+				<button type="submit" class="btn btn-danger">Clear Cart</button>
+			</form>
+			<a href="@Url.Action("Checkout", "Carts")" class="cart-btn checkout-btn">Checkout</a>
+		}
+	</div>
+</div>
+
+
+@foreach (var item in Model)
+{
+	<script>
+  $(function() {
+    var itemId = '@item.Id';
+    var updateUrl = '@Url.Action("UpdateCart", "Carts", new { id = "__itemId__", quantity = "__quantity__" })';
+
+    $('#quantity-' + itemId).on('input', function() {
+      var quantity = $(this).val();
+      var url = updateUrl.replace('__itemId__', itemId).replace('__quantity__', quantity);
+      $('#update-cart-' + itemId).attr('href', url);
+    });
+  });
+	</script>
+}

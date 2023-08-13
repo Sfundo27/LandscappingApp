@@ -1,0 +1,151 @@
+﻿@model AgricultureApp.Models.Appointment.Booking
+
+@{
+	ViewBag.Title = "Create";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+	<style>
+
+
+		/* Wrapper */
+		.wrapper {
+			max-width: 500px;
+			background-color: #8BC34A;
+			margin: 100px auto;
+			padding: 50px;
+			border-radius: 10px;
+			box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+		}
+
+		.form-control {
+			width: 100%;
+			height: 60px;
+		}
+
+		/* Title */
+		.title {
+			text-align: center;
+			font-size: 36px;
+			font-weight: bold;
+			color: #333;
+			margin-bottom: 30px;
+		}
+
+		/* Content */
+		.content {
+			text-align: center;
+		}
+
+		/* Input box */
+		.input-box {
+			margin-bottom: 20px;
+			position: relative;
+			width:100%;
+		}
+
+			.input-box .form-control {
+				width: 100%;
+				padding: 10px 20px;
+				border: none;
+				background-color: #f0f0f0;
+				border-radius: 30px;
+				font-size: 16px;
+				color: #333;
+				transition: all 0.3s ease;
+			}
+
+				.input-box .form-control:focus {
+					outline: none;
+					background-color: #fff;
+					box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+				}
+
+			.input-box .details {
+				position: absolute;
+				left: 20px;
+				top: 50%;
+				transform: translateY(-50%);
+				color: #777;
+				font-size: 16px;
+				font-weight: bold;
+			}
+
+		/* Submit button */
+		.button {
+			text-align: center;
+		}
+
+			.button .btn {
+				padding: 10px 50px;
+				border-radius: 30px;
+				font-size: 16px;
+				font-weight: bold;
+				color: grey;
+				background-color: #fff;
+				border: none;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+
+				.button .btn:hover {
+					background-color: gray;
+					color: #fff;
+				}
+	</style>
+</head>
+@using (Html.BeginForm("Create", "Bookings", FormMethod.Post, new { @class = "wrapper", role = "form" }))
+{
+	<center><div class="title">Make an appointment now</div></center>
+	@Html.AntiForgeryToken()
+	<!-- Create Personal Info -->
+	<form action="#">
+		<div class="user-details">
+			<!-- First Name -->
+			<div class="input-box">
+				@Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", @placeholder = "First Name" })
+				@Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
+			</div>
+			<!-- Last Name -->
+			<div class="input-box">
+				@Html.TextBoxFor(m => m.CustomerSurname, new { @class = "form-control", @placeholder = "Last Name" })
+				@Html.ValidationMessageFor(model => model.CustomerSurname, "", new { @class = "text-danger" })
+			</div>
+			<!-- Email -->
+			<div class="input-box">
+				@Html.TextBoxFor(m => m.CustomerEmail, new { @class = "form-control", @placeholder = "Email" })
+				@Html.ValidationMessageFor(model => model.CustomerEmail, "", new { @class = "text-danger" })
+			</div>
+			<!-- Contact Number -->
+			<div class="input-box">
+				@Html.TextBoxFor(m => m.CustomerContact, new { @class = "form-control", @placeholder = "Contact Number" })
+				@Html.ValidationMessageFor(model => model.CustomerContact, "", new { @class = "text-danger" })
+			</div>
+			<!-- New Password -->
+			<div class="input-box">
+				@Html.TextBoxFor(m => m.CustomerAddress, new { @class = "form-control", @placeholder = "Address" })
+				@Html.ValidationMessageFor(model => model.CustomerAddress, "", new { @class = "text-danger" })
+			</div>
+			<!-- Confirm New Password -->
+			<div class="input-box">
+				<select class="form-control" name="ServiceType">
+					<option selected value="Fumigation">Fumigation</option>
+				</select>
+
+				@Html.ValidationMessageFor(model => model.ServiceType, "", new { @class = "text-danger" })
+			</div>
+			<!-- Confirm New Password -->
+			<div class="input-box">
+				<input type="date" name="Date" value="" class="form-control" />
+				@Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<br />
+		<div class="button">
+			<input type="submit" value="Sign-Up" class="btn btn-transparent" />
+		</div>
+
+	</form>
+}
+

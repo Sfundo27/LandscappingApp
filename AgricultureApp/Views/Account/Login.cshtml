@@ -1,0 +1,123 @@
+﻿@using AgricultureApp.Models
+@model LoginViewModel
+@{
+	ViewBag.Title = "Log in";
+}
+
+<head>
+	<style>
+
+
+		/* Wrapper */
+		.wrapper {
+			max-width: 500px;
+			background-color: #8BC34A;
+			margin: 100px auto;
+			padding: 50px;
+			border-radius: 10px;
+			box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+		}
+
+		.form-control {
+			width: 100%;
+			height: 60px;
+		}
+
+		/* Title */
+		.title {
+			text-align: center;
+			font-size: 36px;
+			font-weight: bold;
+			color: #333;
+			margin-bottom: 30px;
+		}
+
+		/* Content */
+		.content {
+			text-align: center;
+		}
+
+		/* Input box */
+		.input-box {
+			margin-bottom: 20px;
+			position: relative;
+		}
+
+			.input-box .form-control {
+				width: 100%;
+				padding: 10px 20px;
+				border: none;
+				background-color: #f0f0f0;
+				border-radius: 30px;
+				font-size: 16px;
+				color: #333;
+				transition: all 0.3s ease;
+			}
+
+				.input-box .form-control:focus {
+					outline: none;
+					background-color: #fff;
+					box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+				}
+
+			.input-box .details {
+				position: absolute;
+				left: 20px;
+				top: 50%;
+				transform: translateY(-50%);
+				color: #777;
+				font-size: 16px;
+				font-weight: bold;
+			}
+
+		/* Submit button */
+		.button {
+			text-align: center;
+		}
+
+			.button .btn {
+				padding: 10px 50px;
+				border-radius: 30px;
+				font-size: 16px;
+				font-weight: bold;
+				color: grey;
+				background-color: #fff;
+				border: none;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+
+				.button .btn:hover {
+					background-color: gray;
+					color: #fff;
+				}
+	</style>
+</head>
+
+
+@using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "wrapper", role = "form" }))
+{
+	<center><div class="title">Login</div></center>
+	@Html.AntiForgeryToken()
+	<!-- Create Personal Info -->
+	<form action="#">
+		<div class="user-details">
+			<!-- Email -->
+			<div class="input-box">
+				@Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email" })
+				@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+			</div>
+			<!-- New Password -->
+			<div class="input-box">
+				@Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
+				@Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+			</div>
+		</div>
+		<br />
+		<div class="button">
+			<input type="submit" value="Sign-Up" class="btn btn-transparent" />
+		</div>
+
+	</form>
+}
+

@@ -1,0 +1,118 @@
+﻿
+@{
+	ViewBag.Title = "Confirm";
+}
+
+<style>
+	.signature {
+		max-width: 800px;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+		.signature h1 {
+			font-size: 24px;
+			color: #555;
+			margin-bottom: 1rem;
+		}
+
+		.signature p {
+			font-size: 18px;
+			color: #777;
+			margin-bottom: 0.5rem;
+			line-height: 1.5;
+		}
+
+		.signature label {
+			font-size: 1rem;
+			color: #333;
+			display: block;
+			margin-bottom: 0.5rem;
+		}
+
+		.signature button[type="submit"] {
+			font-size: 20px;
+			background-color: #008CBA;
+			color: #fff;
+			padding: 0.5rem 1rem;
+			border: none;
+			border-radius: 0.25rem;
+			cursor: pointer;
+			transition: background-color 0.2s ease-in-out;
+			margin-top: 1rem;
+		}
+
+			.signature button[type="submit"]:hover {
+				background-color: #006a8e;
+			}
+
+		.signature form {
+			max-width: 500px;
+			margin: 0 auto;
+			padding: 1rem;
+			border: 1px solid #ccc;
+			border-radius: 0.25rem;
+			box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+			margin-top: 2rem;
+		}
+
+		.signature canvas {
+			border: 2px solid #ccc;
+			border-radius: 0.25rem;
+			margin-bottom: 1rem;
+		}
+</style>
+
+<div class="signature">
+	<h1>Give to the customer to sign</h1>
+	<p>Hello @ViewBag.Name,</p>
+	<p>Thank you for your support. Please visit our site again.</p>
+
+	<p>To confirm the delivery, please sign below:</p>
+
+	<canvas id="signature-pad"></canvas>
+	<br>
+	<button id="clear-button">Clear</button>
+	<button id="undo-button">Undo</button>
+	<form method="post" action="@Url.Action("Confirm","Shipments")">
+		<input type="hidden" id="SignatureData" name="signature" />
+		<input type="hidden" value="@ViewBag.ID" name="orderId" />
+		<button type="submit">Accept Order</button>
+	</form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+<script>
+	var canvas = document.getElementById('signature-pad');
+	var signaturePad = new SignaturePad(canvas);
+
+	var signatureInput = document.getElementById('signature');
+	var form = document.querySelector('form');
+	var clearButton = document.getElementById('clear-button');
+	var undoButton = document.getElementById('undo-button');
+
+	$('form').submit(function () {
+		if (signaturePad.isEmpty()) {
+			alert('Please provide your signature.');
+			return false;
+		}
+		var dataUrl = signaturePad.toDataURL('image/png');
+		$('#SignatureData').val(dataUrl.split(',')[1]);
+		return true;
+	});
+
+	clearButton.addEventListener('click', function (e) {
+		e.preventDefault();
+		signaturePad.clear();
+	});
+
+	undoButton.addEventListener('click', function (e) {
+		e.preventDefault();
+		var data = signaturePad.toData();
+		if (data) {
+			data.pop();
+			signaturePad.fromData(data);
+		}
+	});
+</script>
+

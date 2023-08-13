@@ -1,0 +1,99 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.OrderItem>
+
+@{
+    ViewBag.Title = "ItemsIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+	table {
+		width: 100%;
+		table-layout: fixed;
+		min-width: 900px;
+		border-collapse: collapse;
+	}
+
+	thead th {
+		position: sticky;
+		top: 0;
+		background-color: #f6f9fc;
+		color: #8493a5;
+		font-size: 15px;
+	}
+
+	th,
+	td {
+		border-bottom: 1px solid #dddddd;
+		padding: 10px 20px;
+		word-break: break-all;
+		width: 120px
+	}
+
+
+	tr:hover td {
+		color: #0298cf;
+		cursor: pointer;
+		background-color: #f6f9fc;
+	}
+
+</style>
+<h2>Order Items List</h2>
+
+<p>
+    @Html.ActionLink("Back to my order", "AllOrders")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Order.OrderNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.itemName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnitPrice)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Order.OrderNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProductId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.itemName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitPrice)
+        </td>
+    </tr>
+}
+    <tr>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+        <td>
+            Total:
+        </td>
+        <td>
+            @ViewBag.Total.ToString("R0.00")
+        </td>
+    </tr>
+
+
+</table>

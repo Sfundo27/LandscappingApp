@@ -1,0 +1,71 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.AppDelivery>
+
+@{
+	ViewBag.Title = "Shipments";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	var message = TempData["Deliveries"] ?? string.Empty;
+}
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+
+<center><h2>My Tasks</h2></center>
+<hr />
+<table class="table">
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.FumName)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.FumEmail)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Name)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Address)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.DeliveryDate)
+		</th>
+		<th></th>
+	</tr>
+
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.FumName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.FumEmail)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Name)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Address)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.DeliveryDate)
+			</td>
+			<td>
+				@if (item.isPickUp == false)
+				{
+					<a href="~/Bookings/Start/@item.Id?bookId=@item.orderId">Start Journey</a>
+				}
+				@if (item.isPickUp == true && item.isConfirmed == false)
+				{
+					<a href="~/Bookings/StartFum/@item.Id">Access Code</a>
+				}
+				@if (item.isConfirmed == true && item.isDelivered == false)
+				{
+					<a href="~/Bookings/Finish/@item.orderId">Finish Fumigation</a>
+				}
+			</td>
+		</tr>
+	}
+
+</table>

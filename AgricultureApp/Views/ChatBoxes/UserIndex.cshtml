@@ -1,0 +1,89 @@
+﻿@model IEnumerable<AgricultureApp.Models.Chat.ChatBox>
+@{
+	ViewBag.Title = "UserIndex";
+}
+<link href="~/Style/Chat.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.2.1/css/all.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+<div class="main">
+	<div class="header">
+		<div class="center">
+			<div>
+				<img class="pfp" src="~/Images/logo.jpg" />
+				<p id="pfpname">Plantation</p>
+			</div>
+		</div>
+	</div>
+	<div class="content">
+		<div style="padding:11px;">
+			@if (Model.Count() == 0)
+			{
+				<p>Start new chat now</p>
+			}
+			else
+			{
+				<div class="msg-btn-holder">
+					@foreach (var i in Model)
+					{
+						if (i.sender == "Admin@Agric.com")
+						{
+							<div class="receiver-msg msg-btn">
+								<p>@i.message</p>
+							</div><br><br><br>
+						}
+						else
+						{
+							<div class="sender-msg msg-btn">
+								<p>@i.message</p>
+							</div><br><br><br>
+						}
+					}
+				</div>
+			}
+		</div>
+	</div>
+	<div class="footer">
+		<form method="post" action="@Url.Action("Create","ChatBoxes")" style="width:100%;padding:11px;">
+			<input placeholder="Message" required id="message" class="text-box" name="message">
+			<div class="send-ico">
+				<button class="btn btn-success" style="position:absolute;" id="submit">Send</button>
+			</div>
+		</form>
+	</div>
+
+</div>
+
+<script>
+	$(document).ready(function () {
+		$('form').submit(function (e) {
+			e.preventDefault(); // Prevent the default form submission
+
+			// Get the form data
+			var formData = $(this).serialize();
+
+			// Make the AJAX request
+			$.ajax({
+				type: 'POST', // Or 'GET' if your server supports GET requests
+				url: $(this).attr('action'), // Get the form action URL
+				data: formData,
+				success: function (response) {
+					// Handle the response from the server
+					// Update your chat display or perform any other necessary actions
+
+					// Example: Append the new message to the container
+					var newMessage = '<div class="sender-msg msg-btn"><p>' + response.message + '</p></div><br><br><br>';
+					$('.msg-btn-holder').append(newMessage);
+
+					// Clear the message input field after successful submission
+					$('#message').val('');
+				},
+				error: function (xhr, status, error) {
+					// Handle any errors that occur during the AJAX request
+				}
+			});
+		});
+	});
+</script>

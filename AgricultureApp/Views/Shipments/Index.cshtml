@@ -1,0 +1,167 @@
+﻿@model IEnumerable<AgricultureApp.Models.Shipping.Shipment>
+
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	var message = TempData["Index"] ?? string.Empty;
+}
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+
+
+
+<style>
+
+	.table {
+		width: 100%;
+	}
+
+	.table_header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		padding: 20px;
+		background-color: rgb(240, 240, 240);
+	}
+
+		.table_header p {
+			color: #000000;
+		}
+
+	button {
+		outline: none;
+		border: none;
+		border-radius: 6px;
+		cursor: pointer;
+		padding: 10px;
+		color: #ffffff;
+	}
+
+	td button:nth-child(1) {
+		background-color: #0298cf;
+	}
+
+	td button:nth-child(2) {
+		background-color: #f80000;
+	}
+
+	padding: 10px 20px;
+
+	.add_new {
+		color: #ffffff;
+		background-color: #0298cf;
+	}
+
+	input {
+		padding: 10px 20px;
+		margin: 0 10px;
+		outline: none;
+		border: 1px solid #0298cf;
+		border-radius: 6px;
+		color: #0298cf;
+	}
+
+	.table_section {
+		height: 500px;
+		overflow: auto;
+	}
+
+	table {
+		width: 100%;
+		table-layout: fixed;
+		min-width: 900px;
+		border-collapse: collapse;
+	}
+
+	thead th {
+		position: sticky;
+		top: 0;
+		background-color: #f6f9fc;
+		color: #8493a5;
+		font-size: 15px;
+	}
+
+	th,
+	td {
+		border-bottom: 1px solid #dddddd;
+		padding: 10px 20px;
+		word-break: break-all;
+		width: 120px
+	}
+
+
+	tr:hover td {
+		color: #0298cf;
+		cursor: pointer;
+		background-color: #f6f9fc;
+	}
+
+	.pagination {
+		display: flex;
+		justify-content: flex-end;
+		width: 100%;
+		padding: 10px 20px;
+	}
+</style>
+
+
+<h2 style="text-align:center; margin-top:30px"><b>Driver`s Shipments</b></h2>
+
+<div class="table">
+	<div class="table_section">
+
+		@if (TempData["ErrorMessage"] != null)
+		{
+			<div class="alert alert-warning alert-dismissible">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<h4><i class="icon fa fa-check"></i> Alert!</h4>
+				@TempData["ErrorMessage"]
+			</div>
+		}
+		@using (Html.BeginForm(actionName: "COnfirmOrder", controllerName: "Orders", routeValues: null, method: FormMethod.Post))
+		{
+
+			<table>
+				<tr>
+					<th>
+						Customer details
+					</th>
+					<th>
+						Shipment Details
+					</th>
+					<th></th>
+				</tr>
+
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							<b> Name :</b> @Html.DisplayFor(modelItem => item.CustomerName) <br />
+							<b>Email :</b> @Html.DisplayFor(modelItem => item.CustomerEmail) <br />
+							<b>Address :</b> @Html.DisplayFor(modelItem => item.Address) <br />
+						</td>
+						<td>
+							<a class="btn btn-warning" target="_blank" href="~/Orders/ItemsIndex/@item.OrderId">View Package Items</a>
+						</td>
+						<td>
+							@if (item.isPickUp == false)
+							{
+								<a href="~/Shipments/GetDirections/@item.shipmentID?orderId=@item.OrderId">Start Delivery</a>
+							}
+							@if (item.isPickUp == true && item.isDelivered == false)
+							{
+								<a href="~/Shipments/Confirm/@item.shipmentID?orderId=@item.OrderId">Confirm Delivery</a>
+							}
+						</td>
+					</tr>
+				}
+			</table>
+
+		}
+	</div>
+</div>
+

@@ -1,0 +1,82 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.Order>
+@{
+	ViewBag.Title = "GetDirections";
+}
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3t1HngBwIECcsZYIOrJWglLMBV1UbWU0&libraries=places"></script>
+
+<style>
+	b {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+</style>
+
+@foreach (var i in Model)
+{
+	<h1>Calculate Distance and Duration</h1>
+	<hr />
+	<button class="btn btn-warning" onclick="calculateDistance()">Calculate</button>
+	<br />
+	<form @Url.Action("GetDirections", "Shipments") method="post" style="background-color:#6ff628a6; padding:5%">
+		<label for="origin-input">Starting Location:</label>
+		<input type="text" name="Starting" id="origin-input" placeholder="Where are you?">
+
+		<label for="destination-input">Destination:</label>
+		<input type="text" name="Destination" id="destination-input" value="@i.DeliveryAddress">
+
+		<hr />
+
+		<div style="width:70%; margin:auto">
+			<input type="hidden" name="id" value="@i.Id" />
+			<b>Distance :<input class="form-control" readonly type="text" name="distance" id="distance" /></b>
+			<br />
+			<b>Duration : <input class="form-control" readonly type="text" name="duration" id="duration" /></b>
+		</div>
+		<hr />
+		<input class="btn btn-default" type="submit" value="Proceed to directions" />
+	</form>
+
+	<script>
+		// Initialize the Google Maps services
+		var geocoder = new google.maps.Geocoder();
+		var autocomplete = new google.maps.places.Autocomplete(document.getElementById('origin-input'));
+		var service = new google.maps.DistanceMatrixService();
+
+		// Function to calculate the distance and duration
+		function calculateDistance() {
+			var origin = document.getElementById('origin-input').value;
+			var destination = document.getElementById('destination-input').value;
+
+			// Check if the destination address is valid
+			geocoder.geocode({ 'address': destination }, function (results, status) {
+				if (status == 'OK') {
+					var validDestination = results[0].formatted_address;
+					document.getElementById('destination-input').value = validDestination;
+
+					// Calculate the distance and duration
+					service.getDistanceMatrix({
+						origins: [origin],
+						destinations: [validDestination],
+						travelMode: 'DRIVING',
+						unitSystem: google.maps.UnitSystem.METRIC
+					}, function (response, status) {
+						if (status == 'OK') {
+							var distance = response.rows[0].elements[0].distance.text;
+							var duration = response.rows[0].elements[0].duration.text;
+							document.getElementById('distance').value = distance;
+							document.getElementById('duration').value = duration;
+							var output = document.getElementById('output');
+							output.innerHTML = 'Distance: ' + distance + '<br>Duration: ' + duration;
+						} else {
+							alert('Error: ' + status);
+						}
+					});
+				} else {
+					alert('Error: Invalid destination address');
+				}
+			});
+		}
+	</script>
+}

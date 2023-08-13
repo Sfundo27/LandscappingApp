@@ -1,0 +1,143 @@
+﻿@model List<AgricultureApp.Models.Cart_Item>
+@using AgricultureApp.Models;
+@{
+	ViewBag.Title = "Shopping Cart";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	//string id = null;
+}
+
+@if (TempData["Success123"] != null)
+{
+    <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <h4><i class="icon fa fa-check"></i> Success!</h4>
+        @TempData["Success123"]
+    </div>
+}
+
+<section class="ad-post bg-gray py-5">
+        <h2 class="title text-center">@ViewBag.Title</h2>
+        <fieldset class="border border-gary p-4 mb-5">
+            <div class="row">
+                @if (Model.Count() <= 0)
+                {
+                    <div class="col-md-12">
+                        <div class="alert alert-warning">
+                            <b>Note :</b> No item(s) from cart available at the moment.
+                        </div>
+                    </div>
+                }
+                else
+                {
+
+                    using (Html.BeginForm())
+                    {
+                        <table class="table">
+                            <tr style="background: #f3f3f3;">
+                                <th hidden="hidden"></th>
+                                <th>Picture</th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Availability
+                                </th>
+                                <th>
+                                    Quantity
+                                </th>
+                                <th>
+                                    Price
+                                </th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            @for (int item = 0; item < Model.Count(); item++)
+                            {
+                                <tr>
+                                    <td hidden="hidden">
+                                        @Html.EditorFor(modelItem => Model[item].cart_item_id)
+                                    </td>
+                                    <td>
+                                        @if (Model[item].Item.Picture != null)
+                                        {
+                                            var base64 = Convert.ToBase64String(Model[item].Item.Picture);
+                                            var imgSrc = string.Format("data:image/gif;base64,{0}", base64);
+                                            <img src="@imgSrc" width="60" height="70" />
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model[item].Item.Name)
+                                    </td>
+                                    <th>
+                                        @Model[item].Item.QuantityInStock in stock
+                                    </th>
+                                    <td>
+                                        @Html.EditorFor(modelItem => Model[item].quantity, new { htmlAttributes = new { @class = "form-control", @style = "width:100px" } })
+                                    </td>
+                                    <th>
+                                        @Model[item].price.ToString("R 0.00")
+                                    </th>
+                                    <td>
+                                        <a href="@Url.Action("remove_from_cart", "Shopping", new { id = Model[item].cart_item_id })" title="Remove from cart" class="btn btn-outline-danger"><i class="fa fa-times"></i> </a>
+                                    </td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td hidden="hidden"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        @if (Model.Count == 0)
+                                        {
+                                            <input type="submit" value="update" class="btn btn-outline-info disabled" />
+                                        }
+                                        else
+                                        {
+                                            <input type="submit" value="update" class="btn btn-outline-info" />
+                                            @*<a href="@Url.Action("update_cart", "Shopping", new { id = Model[item].cart_item_id, qty = Model[item].quantity })" rel="tooltip" class="btn btn-outline-info">update</a>*@
+                                        }
+                                    </td>
+                                    <th>
+                                        Total: @ViewBag.Total.ToString("R 0.00")
+                                    </th>
+                                    <td></td>
+                                </tr>
+                            }
+						<tr>
+							<td hidden="hidden"></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							
+							<td style="font-size:24px;">
+								<strong>
+									Qty:
+									@ViewBag.TotalQTY
+								</strong>
+							</td>
+							<td>
+								<a data-toggle="tooltip" data-placement="top" title="Back to shopping" class="btn btn-warning" href="@Url.Action(actionName: "Index", controllerName: "Shopping")">
+									<i class="fa fa-list"></i>More Shopping
+								</a>
+							</td>
+							<th>
+								<a data-toggle="tooltip" data-placement="top" title="Checkout" class="btn btn-success" href="@Url.Action("Index", "Orders")">
+									<i class="fa fa-dollar"></i>Check-Out
+								</a>
+							</th>
+							<td>Qty:
+							@ViewBag.TotalQTY</td>
+						</tr>
+                        </table>
+
+                    }
+                }
+            </div>
+        </fieldset>
+</section>
+
+
+

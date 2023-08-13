@@ -1,0 +1,96 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.Order>
+@using AgricultureApp.Models;
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	string id = null;
+	var message = TempData["AlertMessage"] ?? string.Empty;
+	double Total = 0.0;
+}
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+<center><h1>My Order History</h1></center>
+@if (TempData["Success"] != null)
+{
+	<div class="alert alert-success alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-check"></i> Success!</h4>
+		@TempData["Success"]
+	</div>
+}
+
+@if (Model.Count() <= 0)
+{
+	<div class="alert alert-warning">
+		<b>Note :</b> No order history available at the moment.
+	</div>
+
+}
+else
+{
+
+	foreach (var item in Model)
+	{
+		<div class="panel panel-default">
+			<div class="panel-heading alert alert-info">
+				<h3 class="panel-title pull-right"><b style="color:#dd4b39; text-transform:capitalize;"> Order No. @Html.DisplayFor(modelItem => item.OrderNo)</b></h3><span class="panel-title"><h3 class="panel-title">Welome, @Html.DisplayFor(modelItem => item.CustomerName)</h3></span>
+			</div>
+			<hr />
+			<div class="panel-body">
+				<div class="row">
+					<div style="width:100%">
+						<table class="table">
+							<tr>
+								<h5 class="alert alert-info"><b>Personal Information</b></h5>
+								<hr />
+								<div class="col-md-12">
+									<div>
+										@Html.DisplayNameFor(model => model.CustomerEmail)
+
+										<span class="pull-right"><b> @Html.DisplayFor(modelItem => item.CustomerEmail) </b></span>
+									</div>
+									<br />
+									<div>
+										@Html.DisplayNameFor(model => model.DeliveryAddress)
+
+										<span class="pull-right"><b> @Html.DisplayFor(modelItem => item.DeliveryAddress) </b></span>
+									</div>
+								</div>
+							</tr>
+							<tr>
+								<h5 class="alert alert-info"><b>Order Details</b></h5>
+								<hr />
+								<div class="col-md-12">
+									<div>
+										@Html.DisplayNameFor(model => model.OrderNo)
+
+										<span class="pull-right"><b> @Html.DisplayFor(modelItem => item.OrderNo) </b></span>
+									</div><br />
+									<div>
+										@Html.DisplayNameFor(model => model.OrderDate)
+
+										<span class="pull-right"><b> @Html.DisplayFor(modelItem => item.OrderDate) </b></span>
+									</div><br />
+
+									<div>
+										@Html.DisplayName("Order Total")
+
+										<span class="pull-right"><b> @item.Total.ToString("R0.00") </b></span>
+									</div>
+									<hr />
+							<tr>
+								<a href="@Url.Action("Index", "Orders")" data-toggle="tooltip" data-placement="top" title="Back to my orders" class="btn btn-outline-warning btn-simple btn-xs"><i class="fa fa-bars"></i></a>
+						<dd class="pull-right">
+							<a href="@Url.Action("Delete", "Orders", new { id = item.Id })" data-toggle="tooltip" data-placement="top" title="Remove order" class="btn btn-outline-danger btn-simple btn-xs"><i class="fa fa-times"></i></a>
+							</tr>
+							</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+}

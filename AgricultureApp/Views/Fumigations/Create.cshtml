@@ -1,0 +1,85 @@
+﻿@model AgricultureApp.Models.Appointment.Fumigation
+@{
+	ViewBag.Title = "Create";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+	/* Style for the notice */
+	p {
+		font-size: 1.2em;
+		font-weight: bold;
+		color: #333;
+		background-color: #f7f7f7;
+		padding: 10px;
+		border: 2px solid #ddd;
+		border-radius: 5px;
+		margin-bottom: 20px;
+		text-align: center;
+	}
+
+	.form-group{
+		display:flex;
+		align-items:center;
+		margin-left:100px;
+		justify-content:center;
+	}
+	span{
+		margin-left:100px;
+		font-size:18px
+	}
+</style>
+
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+	<p class="text-warning">Hi @ViewBag.Name to finish your @ViewBag.Service @ViewBag.Treatment fumigation appointment, Please enter the length(m) and width(m) of your garden to calculate the fumigation total cost:</p>
+	<hr />
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+	<div class="form-group">
+		<label for="width">Width:</label>
+		<input type="number" min="4" id="width" class="form-control" name="width" >
+	</div>
+	<br />
+	<div class="form-group">
+		<label for="length">Length:</label>
+		<input type="number" min="4" id="length" class="form-control" name="length" >
+	</div>
+	<br />
+	<div class="form-group">
+		<label for="price">Price per square meter:</label>
+		<input type="hidden" id="price" class="form-control" name="price" value="@ViewBag.Price">
+		<span id="price-display">R @ViewBag.Price.00</span>
+	</div>
+	<br />
+	<div class="form-group">
+		<label for="total">Total price:</label>
+		<input type="hidden" id="total" class="form-control" name="Total" readonly>
+		<span id="total-display">R0.00</span>
+	</div>
+	<br />
+	<div class="form-group">
+		<div class="col-md-offset-2 col-md-10" style="display:flex; justify-content:space-evenly">
+			<button type="button" onclick="calculateTotal()" class="btn btn-warning">Calculate Total</button>
+			<input type="submit" name="name" value="Send Appointment" class="btn btn-success" />
+		</div>
+	</div>
+</div>
+}
+
+<script>
+	function calculateTotal() {
+		var width = document.getElementById("width").value;
+		var length = document.getElementById("length").value;
+		var price = document.getElementById("price").value;
+
+		var totalSquareMeters = width * length;
+		var totalPrice = totalSquareMeters * price;
+
+		document.getElementById("total").value = totalPrice.toFixed(2);
+		document.getElementById("total-display").innerText = "R" + totalPrice.toFixed(2);
+	}
+</script>

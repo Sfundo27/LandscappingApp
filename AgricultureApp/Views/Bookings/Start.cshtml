@@ -1,0 +1,117 @@
+﻿
+@{
+	ViewBag.Title = "Start";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<center><h2>Get Direxctions to the client</h2></center>
+<style>
+	#calculator {
+		width: stretch;
+		margin: 0 auto;
+		padding: 20px;
+		border-radius: 10px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		background-color: #fff;
+	}
+
+	h1 {
+		font-size: 28px;
+		text-align: center;
+		color: #333;
+	}
+
+	label {
+		display: block;
+		font-size: 16px;
+		color: #666;
+		margin-bottom: 10px;
+	}
+
+	input[type="text"] {
+		width: 100%;
+		padding: 10px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		font-size: 16px;
+		color: #666;
+		margin-bottom: 20px;
+	}
+
+	p {
+		font-size: 16px;
+		color: #666;
+		margin-bottom: 10px;
+	}
+
+	span.distance {
+		font-weight: bold;
+		color: #007bff;
+	}
+
+	span.duration {
+		font-weight: bold;
+		color: #28a745;
+	}
+
+	#map {
+		height: 500px;
+		margin-top: 20px;
+	}
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3t1HngBwIECcsZYIOrJWglLMBV1UbWU0&libraries=places"></script>
+
+<div id="calculator">
+	<h1>Google Maps Distance Calculator</h1>
+	<label for="start">Starting Address: Durban Central, Durban, 4001</label>
+	<input type="text" id="start" name="start" value="Durban Central, Durban, 4001" readonly>
+
+	<label for="destination">Destination Address:</label>
+	<input type="text" id="destination" name="destination" value="@ViewBag.Address" readonly>
+	<hr />
+	<div class="btns" style="display:flex; justify-content:space-between">
+		<button id="calculate">Calculate Distance</button>
+		<form method="post">
+			<input class="btn btn-success" type="submit" name="name" value="Arrived" />
+		</form>
+	</div>
+	<hr />
+	<p>Distance: <span class="distance" id="distance"></span></p>
+	<p>Duration: <span class="duration" id="duration"></span></p>
+	<div id="map"></div>
+</div>
+
+<script>
+	var destinationAutocomplete = new google.maps.places.Autocomplete(document.getElementById('destination'));
+	var map = new google.maps.Map(document.getElementById('map'), {
+		zoom: 8,
+		center: { lat: -29.8593, lng: 31.0205 } // set center to Durban
+	});
+
+	var directionsService = new google.maps.DirectionsService();
+	var directionsRenderer = new google.maps.DirectionsRenderer({
+		map: map
+	});
+
+	document.getElementById('calculate').addEventListener('click', function () {
+		var start = "Durban Central, Durban, 4001";
+		var destination = document.getElementById('destination').value;
+
+		directionsService.route({
+			origin: start,
+			destination: destination,
+			travelMode: 'DRIVING',
+			unitSystem: google.maps.UnitSystem.METRIC
+		}, function (response, status) {
+			if (status === 'OK') {
+				var distance = response.routes[0].legs[0].distance.text;
+				var duration = response.routes[0].legs[0].duration.text;
+				document.getElementById('distance').innerHTML = distance;
+				document.getElementById('duration').innerHTML = duration;
+				directionsRenderer.setDirections(response);
+			} else {
+				alert('Directions request failed due to ' + status);
+			}
+		});
+	});
+</script>

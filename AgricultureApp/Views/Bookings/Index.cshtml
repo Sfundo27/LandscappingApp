@@ -1,0 +1,61 @@
+﻿@model IEnumerable<AgricultureApp.Models.Appointment.Booking>
+
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	var mess = TempData["Index"] ?? null;
+}
+<script>
+	var msg = '@mess'
+	if (msg)
+		alert(msg)
+</script>
+<style>
+	.card {
+		font-size: 18px;
+	}
+
+	.appointment-card {
+		background-color: #f7f7f7;
+		border-radius: 10px;
+		box-shadow: 0 0 10px rgba(0,0,0,0.1);
+		margin-bottom: 20px;
+		padding: 20px;
+		background-color: rgb(171 246 104)
+	}
+
+		.appointment-card p {
+			margin-bottom: 10px;
+		}
+
+		.appointment-card a {
+			margin-top: 10px;
+		}
+</style>
+
+<div class="card">
+	<div class="card-body">
+		<center><h2>My Appointment</h2></center>
+		<hr />
+
+		@foreach (var item in Model)
+		{
+			<div class="appointment-card">
+				<div class="row">
+					<div class="col-md-4">
+						<p><strong>Name: </strong>@Html.DisplayFor(modelItem => item.CustomerName) @Html.DisplayFor(modelItem => item.CustomerSurname)</p>
+						<p><strong>Email: </strong>@Html.DisplayFor(modelItem => item.CustomerEmail)</p>
+						<p><strong>Contact: </strong>@Html.DisplayFor(modelItem => item.CustomerContact)</p>
+						<p><strong>Address: </strong>@Html.DisplayFor(modelItem => item.CustomerAddress)</p>
+					</div>
+					<div class="col-md-4">
+						<p><strong>Service: </strong>@Html.DisplayFor(modelItem => item.ServiceType)</p>
+						<p><strong>Date: </strong>@Html.DisplayFor(modelItem => item.Date)</p>
+						<a href="~/Fumigations/Index/@item.Id" class="btn btn-primary float-right">Details</a>
+					</div>
+
+				</div>
+			</div>
+		}
+	</div>
+</div>

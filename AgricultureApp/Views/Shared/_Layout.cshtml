@@ -1,0 +1,265 @@
+﻿@using Microsoft.AspNet.Identity;
+@using AgricultureApp.Models;
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title - My ASP.NET Application</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	@Styles.Render("~/Content/css")
+	@Scripts.Render("~/bundles/modernizr")
+	<link rel="stylesheet" href="styles.css" />
+	<link href="~/fontawesome-free-6.1.2-web/fontawesome-free-6.1.2-web/css/all.css" rel="stylesheet" />
+
+	<style>
+		/* Main Header */
+		header {
+			background-color: #8BC34A;
+			color: #fff;
+			padding: 20px;
+			height: 100px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin: 0;
+			top: 0;
+			position: fixed;
+			width: 100%;
+		}
+
+		.logo-container {
+			float: right;
+			margin-left: 70%;
+			display:flex;
+			align-items:center;
+			justify-content:space-between;
+		}
+
+		.logo {
+			height: 100px;
+		}
+
+		/* Main Navbar */
+		.navbar ul {
+			list-style: none;
+			display: flex;
+			margin-top: 100px
+		}
+
+			.navbar ul li {
+				margin: 20px;
+			}
+
+				.navbar ul li a {
+					color: #fff;
+					text-decoration: none;
+					font-size: 18px;
+					transition: color 0.2s ease-in-out;
+					position: relative;
+				}
+
+					.navbar ul li a::after {
+						content: "";
+						position: absolute;
+						bottom: -3px;
+						left: 0;
+						width: 100%;
+						height: 3px;
+						background-color: #fff;
+						transform: scaleX(0);
+						transition: transform 0.2s ease-in-out;
+						background-color: white;
+					}
+
+					.navbar ul li a:hover::after {
+						transform: scaleX(1);
+						background-color: white;
+					}
+
+					.navbar ul li a:hover {
+						color: #333;
+						background-color: white;
+					}
+
+		/* Main Container */
+		.container {
+			display: flex;
+		}
+
+		/* Sidebar */
+		.sidebar {
+			background-color: #8BC34A;
+			width: 200px;
+			position: fixed;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			height: 100%;
+		}
+
+			.sidebar ul {
+				list-style: none;
+				padding: 20px;
+			}
+
+				.sidebar ul li a {
+					color: #fff;
+					text-decoration: none;
+					font-size: 18px;
+					transition: color 0.2s ease-in-out;
+					position: relative;
+				}
+
+					.sidebar ul li a::after {
+						content: "";
+						position: absolute;
+						bottom: -3px;
+						left: 0;
+						width: 100%;
+						height: 3px;
+						background-color: #fff;
+						transform: scaleX(0);
+						transition: transform 0.2s ease-in-out;
+					}
+
+					.sidebar ul li a:hover::after {
+						transform: scaleX(1);
+					}
+
+					.sidebar ul li a:hover {
+						color: #333;
+					}
+
+		/* Main Content */
+		main {
+			margin-top: 100px;
+			margin-left: 200px;
+			padding: 20px;
+			background-color: #f0f0f0;
+			width: 100%;
+		}
+
+		.table {
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+			.table td,
+			.table th {
+				border: 1px solid #ddd;
+				padding: 8px;
+				text-align: left;
+			}
+
+			.table tr th {
+				background-color: #f2f2f2;
+			}
+
+			article .card{
+				background-color:#31aa0099;
+				font-size:18px;
+				padding:3%
+			}
+	</style>
+</head>
+<body>
+	@{
+		ApplicationDbContext db = new ApplicationDbContext();
+		var userId = User.Identity.GetUserId();
+		var cart = db.Carts.Where(d => d.UserId == userId).FirstOrDefault();
+		var cartItem = db.CartItems.Where(d => d.userID == userId).ToList();
+		int cartCount = 0;
+		double cartTotal = 0;
+		if (cartItem != null && cartItem.Any())
+		{
+			cartCount = cartItem.Sum(c => c.Quantity);
+
+			foreach (var i in cartItem)
+			{
+				cartTotal += (i.Quantity * i.price);
+			}
+		}
+
+}
+	<div class="container">
+		<header>
+			<div class="logo-container">
+				@if (User.IsInRole("Assistant"))
+				{
+
+
+					<ul style="list-style: none">
+						<li><a href="~/ChatBoxes/AdminIndex" style="font-size:20px;"><i class="fa fa-message"></i></a></li>
+					</ul>
+				}
+				 @if(User.IsInRole("Customer"))
+				{
+					<ul style="list-style: none">
+						<li><a href="~/ChatBoxes/UserIndex" style="font-size:20px;"><i class="fa fa-message"></i></a></li>
+					</ul>
+				}
+				&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;
+				<img class="logo" src="~/Images/logo.jpg" />
+			</div>
+		</header>
+		<nav class="sidebar">
+			<ul>
+				<li><a href="@Url.Action("Index","Home")">Home</a></li>
+				@if (!Request.IsAuthenticated)
+				{<hr />
+					<li><a href="@Url.Action("GetMyCart","Carts")"> Cart (0)</a></li>
+				}
+				@if (User.IsInRole("Customer"))
+				{
+					<hr />
+					<li>@Html.ActionLink("Shop Now", "Shop", "Carts", null, "fa fa-list")</li>
+					<hr />
+					<li>@Html.ActionLink("Track order", "MyIndex", "Orders", null, "fa fa-list")</li>
+					<hr />
+					<li>@Html.ActionLink("Order history", "OrderHistory", "Orders", null, "fa fa-plus")</li>
+					<hr />
+					<li><a href="@Url.Action("GetMyCart","Carts")"> Cart (@cartCount)</a></li>
+					<hr />
+					<li><a href="@Url.Action("Create","Bookings")">Make Appointment</a></li>
+					<hr />
+					<li><a href="@Url.Action("BookingIndex","Bookings")">My Appointment</a></li>
+				}
+				@if (User.IsInRole("Driver"))
+				{
+					<hr />
+					<li>@Html.ActionLink("Shipments", "Index", "Shipments", null, "fa fa-list")</li>
+				}
+				@if (User.IsInRole("Admin"))
+				{
+					<hr />
+					<li><a href="@Url.Action("AssistantIndex","Account")">Fumigators</a></li>
+					<hr />
+					<li><a href="@Url.Action("DriverIndex","Account")">Drivers</a></li>
+					<hr />
+					<li><a href="@Url.Action("Index","FumServices")">Services</a></li>
+				}
+
+				@if (User.IsInRole("Assistant"))
+				{
+
+					<hr />
+					<li>  <a style="color:white" href="@Url.Action("Deliveries", "Bookings")"> Fumigations </a> </li>
+					<hr />
+					<li>  <a style="color:white" href="@Url.Action("AllOrders", "Orders")"> Orders </a> </li>
+					<hr />
+					<li>@Html.ActionLink("Categories", "Index", "Categories", null, "fa fa-list")</li>
+					<hr />
+					<li>@Html.ActionLink("Items", "Index", "Items", null, "fa fa-list")</li>
+				}
+				<hr />
+				@Html.Partial("_LoginPartial")
+			</ul>
+		</nav>
+
+		<main>
+			@RenderBody()
+		</main>
+	</div>
+</body>
+</html>

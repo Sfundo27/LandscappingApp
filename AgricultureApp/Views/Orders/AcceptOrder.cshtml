@@ -1,0 +1,105 @@
+﻿@model AgricultureApp.Models.Product.Order
+@{
+    ViewBag.Title = "Accept my order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<section class="ad-post bg-gray py-5">
+    <div class="container">
+        <h2 class="title text-center">Accept my order</h2>
+        <fieldset class="border border-gary p-4 mb-5">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon info-box-number"></i> Success!</h4>
+                        <br />
+                        <b>Thank you for shopping at our game store, enjoy you game.</b>
+                    </div>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="data:image/png;base64,@Convert.ToBase64String(Model.Picture, 0, Model.Picture.Length)" style="width: 300px; height: 300px" alt="" />
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table">
+                                    <tr>
+                                        <th>Ordered Item</th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.ItemName)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Price</th>
+                                        <td>
+                                            R @Html.DisplayFor(model => model.price), Tot: R @Math.Round(Model.price * Model.quantity)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Qty</th>
+                                        <td>
+                                            @Html.DisplayFor(model => model.quantity)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>
+                                            @Html.DisplayFor(model => model.OrderDate)
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>Ordered By</th>
+                                        <th>
+                                            @Html.DisplayFor(model => model.UserEmail)
+                                        </th>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Delivered By(Name)</th>
+                                        <th>
+                                            @Html.DisplayFor(model => model.dName)
+                                        </th>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Delivered By(Email)</th>
+                                        <th>
+                                            @Html.DisplayFor(model => model.dEmail)
+                                        </th>
+                                    </tr>
+
+                                    <tr>
+                                        <th>When did you receive your parcel</th>
+                                        <th>
+                                            @Html.DropDownList("EarlyLateParcel", new List<SelectListItem> { new SelectListItem { Text = "Much earlier", Value = "Much earlier" },
+                                                                                                             new SelectListItem { Text = "Early", Value = "Ealy" },
+                                                                                                             new SelectListItem { Text = "Late", Value = "Late" },
+                                                                                                             new SelectListItem{ Text="Very late", Value="Very late"} },
+                                            "--- Select Payment Time ---", new { @class = "w-100" })
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a class="btn btn-outline-warning badge" href="@Url.Action("Index","FoodOrders")">
+                                                <i class="fa fa-angle-left"></i>
+                                                Back to my order
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <input type="submit" value="Accept and collect" class="btn btn-transparent" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</section>

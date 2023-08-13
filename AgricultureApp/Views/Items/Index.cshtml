@@ -1,0 +1,111 @@
+﻿@model IEnumerable<AgricultureApp.Models.Product.Item>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+		<th>
+			@Html.DisplayNameFor(model => model.picture)
+		</th>
+        <th>
+            @Html.DisplayNameFor(model => model.name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.catID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.department)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.qty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.price)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+		<td>
+			<a><img src="data:image/png;base64,@Convert.ToBase64String(item.picture, 0, item.picture.Length)" style="width: 40px; height: 40px" alt="" /></a>
+		</td>
+        <td>
+            @Html.DisplayFor(modelItem => item.name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.catID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.department)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.qty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.price)
+        </td>
+		<td>
+			<div style="display:flex; justify-content:space-between">
+				@if (item.avRating >= 1 && item.avRating < 1.9)
+				{
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/Star.png" style="height:40px; width:40px" />
+					<img src="~/Images/Star.png" style="height:40px; width:40px" />
+					<img src="~/Images/Star.png" style="height:40px; width:40px" />
+					<img src="~/Images/Star.png" style="height:40px; width:40px" />
+				}
+				else if (item.avRating >= 2 && item.avRating < 2.9)
+				{
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/Star.png" style="height:40px; width:40px" />
+					<img src="~/Images/Star.png" style="height:40px; width:40px" />
+					<img src="~/Images/Star.png" style="height:40px; width:40px" />
+				}
+				else if (item.avRating >= 3 && item.avRating < 3.9)
+				{
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/Star.png" style="height:40px; width:40px" />
+					<img src="~/Images/Star.png" style="height:40px; width:40px" />
+				}
+				else if (item.avRating >= 4 && item.avRating < 4.9)
+				{
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/Star.png" style="height:40px; width:40px" />
+				}
+				else if (item.avRating == 5)
+				{
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+					<img src="~/Images/StarSelected.png" style="height:40px; width:40px" />
+				}
+			</div>
+		</td>
+		<td>
+			<a href="~/Items/RatingIndex/@item.id">Reviews</a>
+		</td>
+    </tr>
+}
+
+</table>
